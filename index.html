@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Sistemas Operacionais</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🖥️ Quiz - Sistemas Operacionais</h1>
+            <p id="headerSubtitle">Mini Curso de Sistemas Operacionais</p>
+            <button id="themeToggle" class="theme-toggle" aria-label="Alternar tema">🌙</button>
+        </div>
+
+        <div id="menuScreen" class="menu-screen">
+            <div class="menu-title">Selecione uma Aula</div>
+            <div class="menu-subtitle">Escolha qual aula você deseja praticar</div>
+            
+            <div class="lesson-cards">
+                <div class="lesson-card" onclick="startLesson(1)">
+                    <div class="icon">📚</div>
+                    <h3>Aula 01</h3>
+                    <p>Introdução a Sistemas Operacionais</p>
+                </div>
+                
+                <div class="lesson-card" onclick="startLesson(2)">
+                    <div class="icon">🏙️</div>
+                    <h3>Aula 02</h3>
+                    <p>As Grandes Cidades: Windows vs. Linux</p>
+                </div>
+                
+                <div class="lesson-card" onclick="startLesson(3)">
+                    <div class="icon">📁</div>
+                    <h3>Aula 03</h3>
+                    <p>Organizando a Cidade: Arquivos e Pastas</p>
+                </div>
+                
+                <div class="lesson-card" onclick="startLesson(4)">
+                    <div class="icon">⚡</div>
+                    <h3>Aula 04</h3>
+                    <p>O Ritmo da Cidade: CPU, RAM e Processos</p>
+                </div>
+                
+                <div class="lesson-card" onclick="startLesson(5)">
+                    <div class="icon">🔒</div>
+                    <h3>Aula 05</h3>
+                    <p>Construindo e Protegendo: Programas e Segurança</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="quizSection" style="display: none;">
+            <div class="lesson-selector" id="lessonSelector">
+                <button class="lesson-btn" onclick="changeLesson(1)">Aula 01</button>
+                <button class="lesson-btn" onclick="changeLesson(2)">Aula 02</button>
+                <button class="lesson-btn" onclick="changeLesson(3)">Aula 03</button>
+                <button class="lesson-btn" onclick="changeLesson(4)">Aula 04</button>
+                <button class="lesson-btn" onclick="changeLesson(5)">Aula 05</button>
+                <button class="lesson-btn" onclick="backToMenu()">📋 Menu</button>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div id="quizContainer"></div>
+
+            <div class="result-card" id="resultCard">
+                <h2>Quiz Concluído! 🎉</h2>
+                <div class="score-circle">
+                    <div class="score" id="finalScore">0</div>
+                    <div class="label" id="totalQuestions">de 10</div>
+                </div>
+                <div class="result-message" id="resultMessage"></div>
+                <div class="result-details">
+                    <p><strong>Acertos:</strong> <span id="correctCount">0</span></p>
+                    <p><strong>Erros:</strong> <span id="wrongCount">0</span></p>
+                    <p><strong>Porcentagem:</strong> <span id="percentage">0</span>%</p>
+                </div>
+                <button class="btn-primary" onclick="restartQuiz()" style="margin-right: 10px;">Refazer Quiz</button>
+                <button class="btn-secondary" onclick="backToMenu()">Voltar ao Menu</button>
+            </div>
+        </div>
+    </div>
+    <script src="lessons.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
