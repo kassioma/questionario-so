@@ -161,6 +161,15 @@ body {
     background: linear-gradient(135deg, #4c6ef5, #6b46c1);
 }
 
+/* Ajustes para títulos e numeração das perguntas no modo noturno */
+.dark-theme .question-text {
+    color: #ffffff;
+}
+
+.dark-theme .question-number {
+    color: #9fb1ff;
+}
+
 .menu-screen {
     text-align: center;
 }
