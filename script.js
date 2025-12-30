@@ -3,6 +3,69 @@ let currentQuestion = 0;
 let score = 0;
 let answered = false;
 
+// Sistema de rastreamento de progresso
+function getProgressoAulas() {
+    const saved = localStorage.getItem('progressoAulas');
+    return saved ? JSON.parse(saved) : {
+        aula1: null,
+        aula2: null,
+        aula3: null,
+        aula4: null,
+        aula5: null
+    };
+}
+
+function salvarProgressoAula(lessonNum, percentage) {
+    const progresso = getProgressoAulas();
+    progresso[`aula${lessonNum}`] = percentage;
+    localStorage.setItem('progressoAulas', JSON.stringify(progresso));
+    atualizarStatusCertificado();
+}
+
+function atualizarStatusCertificado() {
+    const progresso = getProgressoAulas();
+    const todasCompletas = 
+        progresso.aula1 !== null && progresso.aula1 >= 60 &&
+        progresso.aula2 !== null && progresso.aula2 >= 60 &&
+        progresso.aula3 !== null && progresso.aula3 >= 60 &&
+        progresso.aula4 !== null && progresso.aula4 >= 60 &&
+        progresso.aula5 !== null && progresso.aula5 >= 60;
+    
+    const certCard = document.querySelector('.certificate-card');
+    if (certCard) {
+        if (todasCompletas) {
+            certCard.style.opacity = '1';
+            certCard.style.pointerEvents = 'auto';
+            certCard.style.cursor = 'pointer';
+        } else {
+            certCard.style.opacity = '0.5';
+            certCard.style.pointerEvents = 'none';
+            certCard.style.cursor = 'not-allowed';
+        }
+    }
+    
+    // Atualizar badges de cada aula
+    for (let i = 1; i <= 5; i++) {
+        const badge = document.getElementById(`badge-${i}`);
+        const percentual = progresso[`aula${i}`];
+        
+        if (badge) {
+            if (percentual !== null) {
+                if (percentual >= 60) {
+                    badge.className = 'lesson-badge completed';
+                    badge.textContent = `✅ ${percentual}%`;
+                } else {
+                    badge.className = 'lesson-badge incomplete';
+                    badge.textContent = `⚠️ ${percentual}% (mínimo 60%)`;
+                }
+            } else {
+                badge.className = 'lesson-badge incomplete';
+                badge.textContent = '⏳ Não respondida';
+            }
+        }
+    }
+}
+
 function startLesson(lessonNum) {
     currentLesson = lessonNum;
     document.getElementById('menuScreen').style.display = 'none';
@@ -135,6 +198,9 @@ function showResults() {
     const percentage = Math.round((score / totalQuestions) * 100);
     document.getElementById('percentage').textContent = percentage;
 
+    // Salvar progresso da aula
+    salvarProgressoAula(currentLesson, percentage);
+
     let message = '';
 
     if (percentage === 100) {
@@ -187,4 +253,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
     updateToggleIcon();
     renderQuestion();
+    
+    // Atualizar status do certificado ao carregar
+    atualizarStatusCertificado();
 });
+
+// Função para abrir certificado do menu inicial
+function openCertificateModal() {
+    const progresso = getProgressoAulas();
+    
+    // Verificar se todas as aulas foram completadas com 60%
+    const todasCompletas = 
+        progresso.aula1 !== null && progresso.aula1 >= 60 &&
+        progresso.aula2 !== null && progresso.aula2 >= 60 &&
+        progresso.aula3 !== null && progresso.aula3 >= 60 &&
+        progresso.aula4 !== null && progresso.aula4 >= 60 &&
+        progresso.aula5 !== null && progresso.aula5 >= 60;
+    
+    if (!todasCompletas) {
+        // Construir mensagem com status de cada aula
+        let mensagemStatus = 'Para emitir o certificado, você precisa obter 60% de acerto em TODAS as 5 aulas:\n\n';
+        mensagemStatus += `✅ Aula 1: ${progresso.aula1 !== null ? progresso.aula1 + '%' : '⏳ Não respondida'}\n`;
+        mensagemStatus += `✅ Aula 2: ${progresso.aula2 !== null ? progresso.aula2 + '%' : '⏳ Não respondida'}\n`;
+        mensagemStatus += `✅ Aula 3: ${progresso.aula3 !== null ? progresso.aula3 + '%' : '⏳ Não respondida'}\n`;
+        mensagemStatus += `✅ Aula 4: ${progresso.aula4 !== null ? progresso.aula4 + '%' : '⏳ Não respondida'}\n`;
+        mensagemStatus += `✅ Aula 5: ${progresso.aula5 !== null ? progresso.aula5 + '%' : '⏳ Não respondida'}`;
+        
+        alert(mensagemStatus);
+        return;
+    }
+    
+    const nomeAluno = prompt('Digite seu nome completo para emitir o certificado:');
+    if (nomeAluno && nomeAluno.trim() !== '') {
+        emitirCertificado(nomeAluno);
+    }
+}
+
+// Função para emitir certificado
+function emitirCertificado(nomeAluno) {
+    document.getElementById('nome-certificado').textContent = nomeAluno;
+    
+    const hoje = new Date();
+    const dataFormatada = hoje.toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('data-certificado').textContent = dataFormatada;
+    
+    setTimeout(() => {
+        const certificadoElement = document.getElementById('certificado');
+        html2canvas(certificadoElement, { scale: 2, useCORS: true }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('landscape', 'mm', 'a4');
+            pdf.addImage(imgData, 'PNG', 10, 10, 277.4, 190.5);
+            pdf.save(`Certificado_${nomeAluno.replace(/\s+/g, '_')}.pdf`);
+        });
+    }, 100);
+}

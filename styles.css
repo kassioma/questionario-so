@@ -108,6 +108,15 @@ body {
     color: #dce7ff;
 }
 
+.dark-theme .certificate-card {
+    background: linear-gradient(135deg, #c41e3a, #8b0000);
+    box-shadow: 0 5px 15px rgba(196, 30, 58, 0.4);
+}
+
+.dark-theme .certificate-card:hover {
+    box-shadow: 0 10px 25px rgba(196, 30, 58, 0.5);
+}
+
 .dark-theme .lesson-btn {
     border-color: #9fb1ff;
     color: #9fb1ff;
@@ -187,10 +196,13 @@ body {
 }
 
 .lesson-cards {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin-top: 30px;
-    flex-wrap: nowrap;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .lesson-card {
@@ -201,13 +213,59 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-    flex: 0 0 250px;
-    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 200px;
 }
 
 .lesson-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+.certificate-card {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
+    transition: opacity 0.3s ease, cursor 0.3s ease;
+}
+
+.certificate-card:hover {
+    box-shadow: 0 10px 25px rgba(245, 87, 108, 0.4);
+}
+
+.certificate-card[style*="opacity: 0.5"] {
+    filter: grayscale(30%);
+}
+
+.certificate-card[style*="opacity: 0.5"] .icon {
+    font-size: 2em;
+    opacity: 0.7;
+}
+
+.lesson-badge {
+    margin-top: 10px;
+    font-size: 0.85em;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    text-align: center;
+    min-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lesson-badge.completed {
+    background: rgba(76, 175, 80, 0.6);
+    font-weight: bold;
+}
+
+.lesson-badge.incomplete {
+    background: rgba(244, 67, 54, 0.4);
 }
 
 .lesson-card h3 {
@@ -478,4 +536,67 @@ button:disabled {
         flex: 1 1 100%;
         min-width: auto;
     }
+}
+/* ================= CERTIFICADO ================= */
+
+.certificado {
+    width: 1123px;
+    height: 794px;
+    padding: 60px;
+    background: #ffffff;
+    border: 12px solid #000;
+    font-family: serif;
+
+    position: absolute;
+    left: -9999px;
+    top: 0;
+}
+
+.certificado h1 {
+    text-align: center;
+    font-size: 48px;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .lesson-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .lesson-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .lesson-card {
+        min-height: 160px;
+        padding: 20px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .lesson-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .lesson-card {
+        min-height: 140px;
+    }
+}
+
+.certificado h2 {
+    text-align: center;
+    font-size: 36px;
+    margin: 30px 0;
+}
+
+.certificado p {
+    text-align: center;
+    font-size: 22px;
+}
+
+.assinatura {
+    margin-top: 80px;
+    text-align: center;
 }
